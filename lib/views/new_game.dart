@@ -23,11 +23,12 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
+    _awayTeamController = TextEditingController();
+    _homeTeamController = TextEditingController();
     _homeTeamFocusNode = FocusNode();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(milliseconds: 2000),
     );
     offset = Tween<Offset>(
       begin: Offset.zero,
@@ -143,8 +144,19 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
                       labelText: 'Balls Per Walk',
                       tag: 'ballsPerWalk',
                     ),
+                    Stack(
+                      children: [
+                        SlideTransition(
+                          position: otherOffset,
+                          child: LabelWithCounter(
+                            labelText: 'Strikes Per Out',
+                            tag: 'strikesPerOut',
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(
-                      height: 25,
+                      height: 30,
                     ),
                     Container(
                       height: 40,
@@ -156,7 +168,17 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
                         splashColor: AppColors.secondaryBlue,
                         textColor: Colors.white,
                         onPressed: () {
-                          print('let us go!');
+                          baseGameInfo.updateTeam(
+                            _awayTeamController.text,
+                            'awayTeam',
+                          );
+                          baseGameInfo.updateTeam(
+                            _homeTeamController.text,
+                            'homeTeam',
+                          );
+                          // set uuid
+                          // create a game in sharedpreferences
+                          // push new view
                         },
                         child: Text("LET'S GO!"),
                       ),
