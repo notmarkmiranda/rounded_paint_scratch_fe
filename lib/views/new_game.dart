@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:rounded_paint_scratch_fe/config/app_colors.dart';
 import 'package:rounded_paint_scratch_fe/providers/base_game_info.dart';
@@ -19,6 +20,7 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
   AnimationController _animationController;
   Animation<Offset> offset;
   Animation<Offset> otherOffset;
+  Uuid uuid = Uuid();
 
   @override
   void initState() {
@@ -176,9 +178,12 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
                             _homeTeamController.text,
                             'homeTeam',
                           );
+                          baseGameInfo.updateString(uuid.v1(), 'gameUuid');
                           // set uuid
                           // create a game in sharedpreferences
                           // push new view
+                          print(baseGameInfo.state);
+                          print(DateTime.now());
                         },
                         child: Text("LET'S GO!"),
                       ),
