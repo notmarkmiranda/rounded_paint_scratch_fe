@@ -16,6 +16,8 @@ class NavBar extends StatelessWidget with PreferredSizeWidget {
       return _indexBar(context);
     } else if (section == 'new') {
       return _newBar(context);
+    } else if (section == 'scoreGame') {
+      return _scoreGameBar(context);
     }
   }
 
@@ -139,6 +141,44 @@ class NavBar extends StatelessWidget with PreferredSizeWidget {
         Expanded(
           child: Container(
             height: 45,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _scoreGameBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Container(
+            height: 45,
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 45,
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 45,
+            child: Column(
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: AppColors.primaryBlue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Divider(
+                  color: AppColors.primaryBlue,
+                  thickness: 3,
+                )
+              ],
+            ),
           ),
         ),
       ],
