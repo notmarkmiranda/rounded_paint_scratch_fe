@@ -197,7 +197,12 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (BuildContext context) => ScoreGame(),
+                              builder: (BuildContext context) =>
+                                  ChangeNotifierProvider<BaseGameInfo>(
+                                      create: (context) => BaseGameInfo(
+                                            initialState: baseGameInfo.state,
+                                          ),
+                                      child: ScoreGame()),
                             ),
                           );
                         },
