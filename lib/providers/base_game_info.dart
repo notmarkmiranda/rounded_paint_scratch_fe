@@ -7,6 +7,8 @@ class BaseGameInfo with ChangeNotifier {
   List<Map> _history;
   int _historyIndex = 0;
   Map<String, dynamic> _baseState = {
+    'createdAt': null,
+    'updatedAt': null,
     'gameUuid': '',
     'numberOfInnings': 5,
     'outsPerInning': 3,
@@ -64,6 +66,10 @@ class BaseGameInfo with ChangeNotifier {
     String name = teamName.trim() == ''
         ? tag == 'awayTeam' ? 'Away Team' : 'Home Team'
         : teamName;
-    _baseState[tag] = name;
+    updateTag(name, tag);
+  }
+
+  void updateTag(dynamic value, String tag) {
+    _baseState[tag] = value;
   }
 }

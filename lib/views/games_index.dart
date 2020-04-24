@@ -12,13 +12,13 @@ class GamesIndex extends StatefulWidget {
 
 class _GamesIndexState extends State<GamesIndex> {
   static Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
-  List<Map> _games;
+  List<Map<dynamic, dynamic>> _games;
 
   Future<Null> getString(String key) async {
     final p = await prefs;
     String gamesJson = p.getString(key);
     setState(() {
-      _games = gamesJson != null ? jsonDecode(gamesJson) : [];
+      _games = gamesJson != null ? [jsonDecode(gamesJson)] : [];
     });
   }
 
