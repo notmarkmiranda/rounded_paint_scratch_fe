@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:rounded_paint_scratch_fe/config/app_colors.dart';
 import 'package:rounded_paint_scratch_fe/providers/base_game_info.dart';
+import 'package:rounded_paint_scratch_fe/views/score_game.dart';
 import 'package:rounded_paint_scratch_fe/widgets/label_with_counter.dart';
 import 'package:rounded_paint_scratch_fe/widgets/nav_bar.dart';
 import 'package:rounded_paint_scratch_fe/widgets/team_text_form_field.dart';
@@ -14,6 +18,7 @@ class NewGame extends StatefulWidget {
 }
 
 class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
+  static Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
   TextEditingController _awayTeamController;
   TextEditingController _homeTeamController;
   FocusNode _homeTeamFocusNode;
@@ -51,6 +56,11 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
         curve: Curves.easeInOutBack,
       ),
     );
+  }
+
+  Future<Null> _saveNewGame(gameInfo) async {
+    final p = await prefs;
+    p.setString('allGames', jsonEncode(gameInfo));
   }
 
   @override
@@ -178,12 +188,18 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
                             _homeTeamController.text,
                             'homeTeam',
                           );
-                          baseGameInfo.updateString(uuid.v1(), 'gameUuid');
-                          // set uuid
-                          // create a game in sharedpreferences
-                          // push new view
+                          baseGameInfo.updateTag(uuid.v1(), 'gameUuid');
+                          String now = DateTime.now().toString();
+                          baseGameInfo.updateTag(now, 'createdAt');
+                          baseGameInfo.updateTag(now, 'updatedAt');
                           print(baseGameInfo.state);
-                          print(DateTime.now());
+                          _saveNewGame(baseGameInfo.state);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => ScoreGame(),
+                            ),
+                          );
                         },
                         child: Text("LET'S GO!"),
                       ),
