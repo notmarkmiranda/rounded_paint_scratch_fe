@@ -21,10 +21,19 @@ class NavBar extends StatelessWidget with PreferredSizeWidget {
     }
   }
 
+  IconButton leadingIcon(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.menu),
+      onPressed: () => Scaffold.of(context).openDrawer(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
+      leading: section == "scoreGame" ? leadingIcon(context) : null,
+      iconTheme: IconThemeData(color: AppColors.secondaryBlue),
       centerTitle: false,
       title: buildBar(context),
       backgroundColor: Colors.white,
@@ -32,7 +41,7 @@ class NavBar extends StatelessWidget with PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(40);
+  Size get preferredSize => Size.fromHeight(65);
 
   Widget _indexBar(BuildContext context) {
     return Row(
