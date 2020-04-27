@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 import 'package:rounded_paint_scratch_fe/config/app_colors.dart';
 import 'package:rounded_paint_scratch_fe/providers/base_game_info.dart';
 import 'package:rounded_paint_scratch_fe/views/score_game.dart';
+import 'package:rounded_paint_scratch_fe/widgets/custom_raised_button.dart';
 import 'package:rounded_paint_scratch_fe/widgets/label_with_counter.dart';
 import 'package:rounded_paint_scratch_fe/widgets/nav_bar.dart';
 import 'package:rounded_paint_scratch_fe/widgets/team_text_form_field.dart';
@@ -61,6 +62,33 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
   Future<Null> _saveNewGame(gameInfo) async {
     final p = await prefs;
     p.setString('allGames', jsonEncode(gameInfo));
+  }
+
+  void buttonPressed(BaseGameInfo baseGameInfo) {
+    baseGameInfo.updateTeam(
+      _awayTeamController.text,
+      'awayTeam',
+    );
+    baseGameInfo.updateTeam(
+      _homeTeamController.text,
+      'homeTeam',
+    );
+    baseGameInfo.updateTag(uuid.v1(), 'gameUuid');
+    String now = DateTime.now().toString();
+    baseGameInfo.updateTag(now, 'createdAt');
+    baseGameInfo.updateTag(now, 'updatedAt');
+    print(baseGameInfo.state);
+    _saveNewGame(baseGameInfo.state);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => ChangeNotifierProvider<BaseGameInfo>(
+            create: (context) => BaseGameInfo(
+                  initialState: baseGameInfo.state,
+                ),
+            child: ScoreGame()),
+      ),
+    );
   }
 
   @override
@@ -172,36 +200,10 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
                     ),
                     Container(
                       height: 40,
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        color: AppColors.primaryBlue,
-                        splashColor: AppColors.secondaryBlue,
-                        textColor: Colors.white,
-                        onPressed: () {
-                          baseGameInfo.updateTeam(
-                            _awayTeamController.text,
-                            'awayTeam',
-                          );
-                          baseGameInfo.updateTeam(
-                            _homeTeamController.text,
-                            'homeTeam',
-                          );
-                          baseGameInfo.updateTag(uuid.v1(), 'gameUuid');
-                          String now = DateTime.now().toString();
-                          baseGameInfo.updateTag(now, 'createdAt');
-                          baseGameInfo.updateTag(now, 'updatedAt');
-                          print(baseGameInfo.state);
-                          _saveNewGame(baseGameInfo.state);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => ScoreGame(),
-                            ),
-                          );
-                        },
-                        child: Text("LET'S GO!"),
+                      child: CustomRaisedButton(
+                        buttonText: "LET'S GO!",
+                        buttonPressed: buttonPressed,
+                        baseGameInfo: baseGameInfo,
                       ),
                     ),
                   ],

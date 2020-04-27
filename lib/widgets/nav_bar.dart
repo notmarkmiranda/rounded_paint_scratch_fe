@@ -16,13 +16,24 @@ class NavBar extends StatelessWidget with PreferredSizeWidget {
       return _indexBar(context);
     } else if (section == 'new') {
       return _newBar(context);
+    } else if (section == 'scoreGame') {
+      return _scoreGameBar(context);
     }
+  }
+
+  IconButton leadingIcon(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.menu),
+      onPressed: () => Scaffold.of(context).openDrawer(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
+      leading: section == "scoreGame" ? leadingIcon(context) : null,
+      iconTheme: IconThemeData(color: AppColors.secondaryBlue),
       centerTitle: false,
       title: buildBar(context),
       backgroundColor: Colors.white,
@@ -30,7 +41,7 @@ class NavBar extends StatelessWidget with PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(40);
+  Size get preferredSize => Size.fromHeight(65);
 
   Widget _indexBar(BuildContext context) {
     return Row(
@@ -139,6 +150,44 @@ class NavBar extends StatelessWidget with PreferredSizeWidget {
         Expanded(
           child: Container(
             height: 45,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _scoreGameBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Container(
+            height: 45,
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 45,
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 45,
+            child: Column(
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: AppColors.primaryBlue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Divider(
+                  color: AppColors.primaryBlue,
+                  thickness: 3,
+                )
+              ],
+            ),
           ),
         ),
       ],
