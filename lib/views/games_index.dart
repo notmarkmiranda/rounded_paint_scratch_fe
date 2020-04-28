@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'package:rounded_paint_scratch_fe/config/app_colors.dart';
+import 'package:rounded_paint_scratch_fe/widgets/game_row.dart';
 import 'package:rounded_paint_scratch_fe/widgets/nav_bar.dart';
 
 class GamesIndex extends StatefulWidget {
@@ -58,81 +59,11 @@ class _GamesIndexState extends State<GamesIndex> {
       return ListView.builder(
         itemCount: _games.length,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
-            child: Padding(
-              padding: EdgeInsets.only(top: 25, left: 20, right: 20),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 15),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: Text(
-                            _games[index]['awayTeam'],
-                            style: TextStyle(
-                              color: AppColors.backgroundGrey,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            _games[index]['awayRuns'].toString(),
-                            style: TextStyle(
-                              color: AppColors.backgroundGrey,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 15),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: Text(
-                            _games[index]['homeTeam'],
-                            style: TextStyle(
-                              color: AppColors.primaryBlue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                _games[index]['homeRuns'].toString(),
-                                style: TextStyle(
-                                  color: AppColors.primaryBlue,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 15),
-                                child: Text(
-                                  buildInning(_games[index]),
-                                  style:
-                                      TextStyle(color: AppColors.primaryBlue),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                ],
-              ),
-            ),
+          return GameRow(
+            // TODO: Can this be refactored to just send the singular game in?
+            games: _games,
+            index: index,
+            inning: buildInning(_games[index]),
           );
         },
       );
