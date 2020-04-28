@@ -12,13 +12,18 @@ class GamesIndex extends StatefulWidget {
 
 class _GamesIndexState extends State<GamesIndex> {
   static Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
-  List<Map<dynamic, dynamic>> _games;
+  List<dynamic> _games;
+
+  Future<Null> clearGames() async {
+    final p = await prefs;
+    p.setString('allGames', null);
+  }
 
   Future<Null> getString(String key) async {
     final p = await prefs;
     String gamesJson = p.getString(key);
     setState(() {
-      _games = gamesJson != null ? [jsonDecode(gamesJson)] : [];
+      _games = gamesJson != null ? jsonDecode(gamesJson) : [];
     });
   }
 
@@ -29,9 +34,15 @@ class _GamesIndexState extends State<GamesIndex> {
     getString('allGames');
   }
 
-  List<Widget> buildGames() {
+  String buildInning(Map game) {
+    String prefix = game['topInning'] ? 'Top' : 'Bottom';
+    String inning = game['inning'].toString();
+    return '$prefix $inning';
+  }
+
+  ListView buildGames(BuildContext context) {
     if (_games.isEmpty) {
-      return [
+      return ListView(children: [
         Padding(
           padding: EdgeInsets.all(20.0),
           child: Text(
@@ -42,9 +53,89 @@ class _GamesIndexState extends State<GamesIndex> {
             ),
           ),
         ),
-      ];
+      ]);
     } else {
-      return [];
+      return ListView.builder(
+        itemCount: _games.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            child: Padding(
+              padding: EdgeInsets.only(top: 25, left: 20, right: 20),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 15),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: Text(
+                            _games[index]['awayTeam'],
+                            style: TextStyle(
+                              color: AppColors.backgroundGrey,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            _games[index]['awayRuns'].toString(),
+                            style: TextStyle(
+                              color: AppColors.backgroundGrey,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 15),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: Text(
+                            _games[index]['homeTeam'],
+                            style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                _games[index]['homeRuns'].toString(),
+                                style: TextStyle(
+                                  color: AppColors.primaryBlue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 15),
+                                child: Text(
+                                  buildInning(_games[index]),
+                                  style:
+                                      TextStyle(color: AppColors.primaryBlue),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                ],
+              ),
+            ),
+          );
+        },
+      );
     }
   }
 
@@ -61,7 +152,13 @@ class _GamesIndexState extends State<GamesIndex> {
         color: Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: buildGames(),
+          children: [
+            Expanded(
+              child: Container(
+                child: buildGames(context),
+              ),
+            ),
+          ],
         ),
       ),
     );
