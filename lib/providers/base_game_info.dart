@@ -27,6 +27,7 @@ class BaseGameInfo with ChangeNotifier {
     'topInning': true,
     'awayRuns': 0,
     'homeRuns': 0,
+    'finalized': false,
   };
 
   BaseGameInfo({this.initialState}) {
@@ -34,7 +35,7 @@ class BaseGameInfo with ChangeNotifier {
     _history = [base];
   }
 
-  Map get state => _baseState;
+  Map get state => hasState ? _history[_historyIndex] : _baseState;
 
   bool get hasState => _history.isNotEmpty;
 
