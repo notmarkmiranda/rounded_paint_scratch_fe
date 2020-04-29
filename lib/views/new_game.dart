@@ -61,7 +61,10 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
 
   Future<Null> _saveNewGame(gameInfo) async {
     final p = await prefs;
-    p.setString('allGames', jsonEncode(gameInfo));
+    var gamesJson = p.getString('allGames');
+    List existingGames = gamesJson == null ? [] : jsonDecode(gamesJson);
+    existingGames.insert(0, gameInfo);
+    p.setString('allGames', jsonEncode(existingGames));
   }
 
   void buttonPressed(BaseGameInfo baseGameInfo) {
@@ -77,16 +80,16 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
     String now = DateTime.now().toString();
     baseGameInfo.updateTag(now, 'createdAt');
     baseGameInfo.updateTag(now, 'updatedAt');
-    print(baseGameInfo.state);
     _saveNewGame(baseGameInfo.state);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => ChangeNotifierProvider<BaseGameInfo>(
-            create: (context) => BaseGameInfo(
-                  initialState: baseGameInfo.state,
-                ),
-            child: ScoreGame()),
+          create: (context) => BaseGameInfo(
+            initialState: baseGameInfo.state,
+          ),
+          child: ScoreGame(),
+        ),
       ),
     );
   }

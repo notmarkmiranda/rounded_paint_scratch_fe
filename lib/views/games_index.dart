@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'package:rounded_paint_scratch_fe/config/app_colors.dart';
+import 'package:rounded_paint_scratch_fe/widgets/game_row.dart';
 import 'package:rounded_paint_scratch_fe/widgets/nav_bar.dart';
 
 class GamesIndex extends StatefulWidget {
@@ -12,13 +13,24 @@ class GamesIndex extends StatefulWidget {
 
 class _GamesIndexState extends State<GamesIndex> {
   static Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
-  List<Map<dynamic, dynamic>> _games;
+  List<dynamic> _games;
+
+  Future<Null> clearGames() async {
+    final p = await prefs;
+    p.setString('allGames', null);
+  }
+
+  Future<Null> _setGames() async {
+    final p = await prefs;
+    String encodedGames = jsonEncode(_games);
+    p.setString('allGames', encodedGames);
+  }
 
   Future<Null> getString(String key) async {
     final p = await prefs;
     String gamesJson = p.getString(key);
     setState(() {
-      _games = gamesJson != null ? [jsonDecode(gamesJson)] : [];
+      _games = gamesJson != null ? jsonDecode(gamesJson) : [];
     });
   }
 
@@ -29,9 +41,22 @@ class _GamesIndexState extends State<GamesIndex> {
     getString('allGames');
   }
 
-  List<Widget> buildGames() {
+  String buildInning(Map game) {
+    String prefix = game['topInning'] ? 'Top' : 'Bottom';
+    String inning = game['inning'].toString();
+    return '$prefix $inning';
+  }
+
+  void removeGame(int index) {
+    setState(() {
+      _games.removeAt(index);
+      _setGames();
+    });
+  }
+
+  ListView buildGames(BuildContext context) {
     if (_games.isEmpty) {
-      return [
+      return ListView(children: [
         Padding(
           padding: EdgeInsets.all(20.0),
           child: Text(
@@ -42,9 +67,20 @@ class _GamesIndexState extends State<GamesIndex> {
             ),
           ),
         ),
-      ];
+      ]);
     } else {
-      return [];
+      return ListView.builder(
+        itemCount: _games.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GameRow(
+            // TODO: Can this be refactored to just send the singular game in?
+            games: _games,
+            index: index,
+            inning: buildInning(_games[index]),
+            removeGame: removeGame,
+          );
+        },
+      );
     }
   }
 
@@ -61,7 +97,13 @@ class _GamesIndexState extends State<GamesIndex> {
         color: Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: buildGames(),
+          children: [
+            Expanded(
+              child: Container(
+                child: buildGames(context),
+              ),
+            ),
+          ],
         ),
       ),
     );
