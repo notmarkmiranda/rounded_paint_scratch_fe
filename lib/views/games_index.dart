@@ -20,6 +20,12 @@ class _GamesIndexState extends State<GamesIndex> {
     p.setString('allGames', null);
   }
 
+  Future<Null> _setGames() async {
+    final p = await prefs;
+    String encodedGames = jsonEncode(_games);
+    p.setString('allGames', encodedGames);
+  }
+
   Future<Null> getString(String key) async {
     final p = await prefs;
     String gamesJson = p.getString(key);
@@ -39,6 +45,13 @@ class _GamesIndexState extends State<GamesIndex> {
     String prefix = game['topInning'] ? 'Top' : 'Bottom';
     String inning = game['inning'].toString();
     return '$prefix $inning';
+  }
+
+  void removeGame(int index) {
+    setState(() {
+      _games.removeAt(index);
+      _setGames();
+    });
   }
 
   ListView buildGames(BuildContext context) {
@@ -64,6 +77,7 @@ class _GamesIndexState extends State<GamesIndex> {
             games: _games,
             index: index,
             inning: buildInning(_games[index]),
+            removeGame: removeGame,
           );
         },
       );

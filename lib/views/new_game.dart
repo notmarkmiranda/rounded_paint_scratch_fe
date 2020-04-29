@@ -85,10 +85,11 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => ChangeNotifierProvider<BaseGameInfo>(
-            create: (context) => BaseGameInfo(
-                  initialState: baseGameInfo.state,
-                ),
-            child: ScoreGame()),
+          create: (context) => BaseGameInfo(
+            initialState: baseGameInfo.state,
+          ),
+          child: ScoreGame(),
+        ),
       ),
     );
   }
