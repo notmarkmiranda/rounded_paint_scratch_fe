@@ -4,14 +4,12 @@ import 'package:rounded_paint_scratch_fe/config/app_colors.dart';
 import 'package:rounded_paint_scratch_fe/providers/base_game_info.dart';
 
 class CustomRaisedButton extends StatelessWidget {
-  BaseGameInfo baseGameInfo;
   Function buttonPressed;
   String buttonText;
   Color color;
   Color splashColor;
 
   CustomRaisedButton({
-    this.baseGameInfo,
     this.buttonPressed,
     this.buttonText,
     color,
@@ -29,7 +27,7 @@ class CustomRaisedButton extends StatelessWidget {
       splashColor: splashColor,
       textColor: Colors.white,
       onPressed: () {
-        buttonPressed(baseGameInfo);
+        buttonPressed();
       },
       child: Text(buttonText),
     );

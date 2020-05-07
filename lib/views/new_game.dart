@@ -205,8 +205,9 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
                       height: 40,
                       child: CustomRaisedButton(
                         buttonText: "LET'S GO!",
-                        buttonPressed: buttonPressed,
-                        baseGameInfo: baseGameInfo,
+                        buttonPressed: () {
+                          buttonPressed(baseGameInfo);
+                        },
                       ),
                     ),
                   ],

@@ -187,7 +187,9 @@ class ScoreGame extends StatelessWidget {
                       children: [
                         Container(
                           child: Text(
-                            _inningNumber(baseGameInfo.state),
+                            baseGameInfo.state['topInning']
+                                ? 'TOP ${baseGameInfo.state['inning']}'
+                                : 'BOTTOM ${baseGameInfo.state['inning']}',
                             style: TextStyle(
                               fontSize: 18,
                               color: AppColors.secondaryBlue,
@@ -203,14 +205,22 @@ class ScoreGame extends StatelessWidget {
                           stat: 'B',
                           number: baseGameInfo.state['balls'],
                         ),
-                        CountStat(
-                          stat: 'S',
-                          number: baseGameInfo.state['strikes'],
-                        ),
-                        CountStat(
-                          stat: 'F',
-                          number: baseGameInfo.state['fouls'],
-                        ),
+                        if (baseGameInfo.state['combineFoulsStrikes'])
+                          CountStat(
+                            stat: 'S / F',
+                            number: baseGameInfo.state['strikes'] +
+                                baseGameInfo.state['fouls'],
+                          ),
+                        if (baseGameInfo.state['combineFoulsStrikes'] == false)
+                          CountStat(
+                            stat: 'S',
+                            number: baseGameInfo.state['strikes'],
+                          ),
+                        if (baseGameInfo.state['combineFoulsStrikes'] == false)
+                          CountStat(
+                            stat: 'F',
+                            number: baseGameInfo.state['fouls'],
+                          ),
                         CountStat(
                           stat: '0',
                           number: baseGameInfo.state['outs'],
@@ -313,6 +323,7 @@ class ScoreGame extends StatelessWidget {
                           buttonText: 'IN PLAY',
                           color: AppColors.secondaryBlue,
                           splashColor: AppColors.primaryBlue,
+                          buttonPressed: baseGameInfo.inPlay,
                         ),
                       ),
                       SizedBox(
@@ -323,6 +334,7 @@ class ScoreGame extends StatelessWidget {
                           buttonText: 'RUN',
                           color: AppColors.secondaryBlue,
                           splashColor: AppColors.primaryBlue,
+                          // TODO: implement run method in BaseGameInfo
                         ),
                       ),
                       SizedBox(
@@ -333,6 +345,7 @@ class ScoreGame extends StatelessWidget {
                           buttonText: 'OUT',
                           color: AppColors.secondaryBlue,
                           splashColor: AppColors.primaryBlue,
+                          buttonPressed: baseGameInfo.out,
                         ),
                       ),
                     ],
@@ -352,6 +365,7 @@ class ScoreGame extends StatelessWidget {
                       Expanded(
                         child: CustomRaisedButton(
                           buttonText: 'BALL',
+                          buttonPressed: baseGameInfo.ball,
                         ),
                       ),
                       SizedBox(
@@ -360,6 +374,9 @@ class ScoreGame extends StatelessWidget {
                       Expanded(
                         child: CustomRaisedButton(
                           buttonText: 'STRIKE',
+                          buttonPressed: () {
+                            baseGameInfo.strikeOrFoul('strikes');
+                          },
                         ),
                       ),
                       SizedBox(
@@ -368,6 +385,9 @@ class ScoreGame extends StatelessWidget {
                       Expanded(
                         child: CustomRaisedButton(
                           buttonText: 'FOUL',
+                          buttonPressed: () {
+                            baseGameInfo.strikeOrFoul('fouls');
+                          },
                         ),
                       ),
                     ],
