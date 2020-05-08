@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum Direction { up, down }
 
 class BaseGameInfo with ChangeNotifier {
+  static Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
   Map initialState;
   List<Map> _history;
   int _historyIndex = 0;
@@ -122,7 +126,19 @@ class BaseGameInfo with ChangeNotifier {
   void updateState(Map state) {
     _history.add(state);
     _historyIndex++;
+    _updateGameData();
     notifyListeners();
+  }
+
+  Future<Null> _updateGameData() async {
+    final p = await prefs;
+    var gamesJson = p.getString('allGames');
+    List allGames = jsonDecode(gamesJson);
+    int gameIndex = allGames
+        .indexWhere((element) => element['gameUuid'] == state['gameUuid']);
+    allGames.removeAt(gameIndex);
+    allGames.add(state);
+    p.setString('allGames', jsonEncode(allGames));
   }
 
   void toggleFoulsStrikes(bool value) {
