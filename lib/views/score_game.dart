@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:rounded_paint_scratch_fe/config/app_colors.dart';
 import 'package:rounded_paint_scratch_fe/providers/base_game_info.dart';
+import 'package:rounded_paint_scratch_fe/views/games_index.dart';
 import 'package:rounded_paint_scratch_fe/widgets/count_stat.dart';
 import 'package:rounded_paint_scratch_fe/widgets/custom_raised_button.dart';
 import 'package:rounded_paint_scratch_fe/widgets/nav_bar.dart';
@@ -51,7 +52,12 @@ class ScoreGame extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.bubble_chart),
                 title: Text('ALL SCORES'),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => GamesIndex()));
+                },
               ),
               ListTile(
                 leading: Icon(Icons.loupe),
