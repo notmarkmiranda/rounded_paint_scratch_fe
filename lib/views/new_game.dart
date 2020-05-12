@@ -29,6 +29,12 @@ class _NewGameState extends State<NewGame> with SingleTickerProviderStateMixin {
   Uuid uuid = Uuid();
 
   @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _awayTeamController = TextEditingController();
