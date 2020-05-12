@@ -97,8 +97,8 @@ class BaseGameInfo with ChangeNotifier {
     updateState(newState);
   }
 
-  void _resetCount({bool incrementOut = false}) {
-    Map newState = Map.from(state);
+  void _resetCount({bool incrementOut = false, Map incomingState = null}) {
+    Map newState = incomingState ?? Map.from(state);
     newState['balls'] = 0;
     newState['strikes'] = 0;
     newState['fouls'] = 0;
@@ -155,5 +155,13 @@ class BaseGameInfo with ChangeNotifier {
 
   void updateTag(dynamic value, String tag) {
     _baseState[tag] = value;
+  }
+
+  void run() {
+    Map newState = Map.from(state);
+    String tag = state['topInning'] ? 'awayRuns' : 'homeRuns';
+    int newRuns = state[tag] + 1;
+    newState[tag] = newRuns;
+    _resetCount(incomingState: newState);
   }
 }

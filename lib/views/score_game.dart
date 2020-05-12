@@ -100,14 +100,17 @@ class ScoreGame extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Container(
-                        width: 8.0,
-                        height: 8.0,
-                        decoration: BoxDecoration(
-                          color: Colors.orange,
-                          shape: BoxShape.circle,
+                    Opacity(
+                      opacity: baseGameInfo.state['topInning'] ? 1 : 0,
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Container(
+                          width: 8.0,
+                          height: 8.0,
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ),
                     ),
@@ -155,14 +158,17 @@ class ScoreGame extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 8.0,
-                        height: 8.0,
-                        decoration: BoxDecoration(
-                          color: Colors.orange,
-                          shape: BoxShape.circle,
+                    Opacity(
+                      opacity: baseGameInfo.state['topInning'] ? 0 : 1,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 8.0,
+                          height: 8.0,
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ),
                     ),
@@ -340,7 +346,7 @@ class ScoreGame extends StatelessWidget {
                           buttonText: 'RUN',
                           color: AppColors.secondaryBlue,
                           splashColor: AppColors.primaryBlue,
-                          // TODO: implement run method in BaseGameInfo
+                          buttonPressed: baseGameInfo.run,
                         ),
                       ),
                       SizedBox(

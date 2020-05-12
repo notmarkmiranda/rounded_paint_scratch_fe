@@ -73,8 +73,7 @@ class _GamesIndexState extends State<GamesIndex> {
         itemCount: _games.length,
         itemBuilder: (BuildContext context, int index) {
           return GameRow(
-            // TODO: Can this be refactored to just send the singular game in?
-            games: _games,
+            game: _games[index],
             index: index,
             inning: buildInning(_games[index]),
             removeGame: removeGame,

@@ -6,25 +6,25 @@ import 'package:rounded_paint_scratch_fe/providers/base_game_info.dart';
 import 'package:rounded_paint_scratch_fe/views/score_game.dart';
 
 class GameRow extends StatelessWidget {
-  final List games;
+  final Map game;
   final int index;
   final String inning;
   final Function removeGame;
 
-  GameRow({this.games, this.index, this.inning, this.removeGame});
+  GameRow({this.game, this.index, this.inning, this.removeGame});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (games[index]['finalized'] == false) {
+        if (game['finalized'] == false) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (BuildContext context) =>
                   ChangeNotifierProvider<BaseGameInfo>(
                 create: (context) => BaseGameInfo(
-                  initialState: games[index],
+                  initialState: game,
                 ),
                 child: ScoreGame(),
               ),
@@ -33,7 +33,7 @@ class GameRow extends StatelessWidget {
         }
       },
       child: Dismissible(
-        key: ObjectKey(games[index]),
+        key: ObjectKey(game),
         background: Container(
           color: Colors.red,
           alignment: Alignment.centerRight,
@@ -49,7 +49,7 @@ class GameRow extends StatelessWidget {
         },
         child: Container(
           child: Padding(
-            padding: EdgeInsets.only(top: 25, left: 20, right: 20),
+            padding: EdgeInsets.only(top: 25, left: 20, right: 25),
             child: Column(
               children: [
                 Padding(
@@ -57,9 +57,9 @@ class GameRow extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 4,
+                        flex: 3,
                         child: Text(
-                          games[index]['awayTeam'],
+                          game['awayTeam'],
                           style: TextStyle(
                             color: AppColors.backgroundGrey,
                             fontWeight: FontWeight.bold,
@@ -69,7 +69,7 @@ class GameRow extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          games[index]['awayRuns'].toString(),
+                          game['awayRuns'].toString(),
                           style: TextStyle(
                             color: AppColors.backgroundGrey,
                             fontWeight: FontWeight.bold,
@@ -84,9 +84,9 @@ class GameRow extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 4,
+                        flex: 3,
                         child: Text(
-                          games[index]['homeTeam'],
+                          game['homeTeam'],
                           style: TextStyle(
                             color: AppColors.primaryBlue,
                             fontWeight: FontWeight.bold,
@@ -98,7 +98,7 @@ class GameRow extends StatelessWidget {
                         child: Row(
                           children: <Widget>[
                             Text(
-                              games[index]['homeRuns'].toString(),
+                              game['homeRuns'].toString(),
                               style: TextStyle(
                                 color: AppColors.primaryBlue,
                                 fontWeight: FontWeight.bold,
@@ -108,7 +108,10 @@ class GameRow extends StatelessWidget {
                               padding: EdgeInsets.only(left: 15),
                               child: Text(
                                 inning,
-                                style: TextStyle(color: AppColors.primaryBlue),
+                                style: TextStyle(
+                                  color: AppColors.primaryBlue,
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                           ],
