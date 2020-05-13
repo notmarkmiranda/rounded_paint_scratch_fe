@@ -43,6 +43,21 @@ class BaseGameInfo with ChangeNotifier {
 
   bool get hasState => _history.isNotEmpty;
 
+  void undo() {
+    if (_historyIndex > 0) {
+      _historyIndex--;
+      notifyListeners();
+    }
+  }
+
+  void redo() {
+    int stateLength = _history.length - 1;
+    if (_historyIndex < stateLength) {
+      _historyIndex++;
+      notifyListeners();
+    }
+  }
+
   void changeTag(String tag, Direction direction) {
     switch (direction) {
       case Direction.up:
@@ -124,6 +139,9 @@ class BaseGameInfo with ChangeNotifier {
   }
 
   void updateState(Map state) {
+    if (_historyIndex != (_history.length - 1)) {
+      _history = _history.sublist(0, (_historyIndex + 1));
+    }
     _history.add(state);
     _historyIndex++;
     _updateGameData();
