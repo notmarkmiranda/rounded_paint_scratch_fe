@@ -291,7 +291,9 @@ class ScoreGame extends StatelessWidget {
                               child: Icon(Icons.undo),
                               color: AppColors.backgroundGrey,
                               textColor: Colors.white,
-                              onPressed: () {},
+                              onPressed: () {
+                                baseGameInfo.undo();
+                              },
                             ),
                           ),
                           SizedBox(
@@ -307,7 +309,9 @@ class ScoreGame extends StatelessWidget {
                               child: Icon(Icons.redo),
                               color: AppColors.backgroundGrey,
                               textColor: Colors.white,
-                              onPressed: () {},
+                              onPressed: () {
+                                baseGameInfo.redo();
+                              },
                             ),
                           ),
                         ],
